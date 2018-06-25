@@ -18,7 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
+from web_chat.views import Index, Login, Registration
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$', TemplateView.as_view(template_name='index.html'),
+    url(r'^$', Index.as_view(), name='index'),
+    url(r'^login$', Login.as_view(), name='login'),
+    url(r'^registration$', Registration.as_view(), name='registration')
 ]
