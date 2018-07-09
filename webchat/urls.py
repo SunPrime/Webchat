@@ -18,11 +18,17 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
-from web_chat.views import Index, Login, Registration
+from web_chat.admin_panel import get_users, add_to_ban, delete_from_ban
+from web_chat.views import Index, Login, Registration, Chat, Admin
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     url(r'^$', Index.as_view(), name='index'),
     url(r'^login$', Login.as_view(), name='login'),
-    url(r'^registration$', Registration.as_view(), name='registration')
+    url(r'^registration$', Registration.as_view(), name='registration'),
+    url(r'^chat$', Chat.as_view(), name='chat'),
+    url(r'^admin$', Admin.as_view(), name='admin'),
+    url(r'^users$', get_users, name='getuser'),
+    url(r'^addban$', add_to_ban, name='add_to_ban'),
+    url(r'^delban/(\d+)$', delete_from_ban, name='delete_from_ban'),
 ]

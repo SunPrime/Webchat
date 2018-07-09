@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+
+</script>
+
+<script>
+    function get_users() {
+        $.ajax({
+            type:'GET',
+            contentType:'application/json',
+            url:'{{ url_get_user }}',
+            dataType:'json',
+            success: function (data, status, jq) {
+                var array_users = data.users;
+                document.getElementById('active-users').innerHTML = '';
+                for (var i = 0; i < array_users.length; i++) {
+                    var li_tag = document.createElement('li');
+                    var input_tag = document.createElement('input');
+                    input_tag.type = 'button';
+                    input_tag.value = array_users[i].links[0].rel;
+                    input_tag.id = array_users[i].login;
+                    input_tag.name = array_users[i].links[0].href;
+                    input_tag.addEventListener('click', user_status)
+                    li_tag.innerText = array_users[i].login;
+                    li_tag.appendChild(input_tag);
+                    document.getElementById('active-users').appendChild(li_tag);
+                }
+            }
+        });
+
+    }
+    function user_status(event) {
+        var button = event.currentTarget;
+        var login = button.id;
+        var rel = button.value;
+        var href = button.name;
+        if (rel == 'add') {
+            $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: href,
+                data: JSON.stringify({
+                    'login': login
+                }),
+                success: function (data, status, jq) {
+                    get_users();
+                }
+            });
+        } else {
+            $.ajax({
+                type: 'DELETE',
+                contentType: 'application/json',
+                url: href,
+                success: function (data, status, jq) {
+                    get_users();
+                }
+            });
+        }
+    }
+    get_users()
+</script>
+<body>
+
+    <form>
+        <ul id="active-users">
+
+        </ul>
+    </form>
+</body>
+</html>
